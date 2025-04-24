@@ -105,6 +105,13 @@ return [
             'processors' => [PsrLogMessageProcessor::class],
         ],
 
+        'lol' => [
+            'driver' => 'single', // hoặc daily, stack tùy Hưng
+            'path' => storage_path('logs/lol.log'),
+            'level' => 'debug', // hoặc error, info, critical...
+            'replace_placeholders' => true, // Laravel >=10.7
+        ],
+
         'syslog' => [
             'driver' => 'syslog',
             'level' => env('LOG_LEVEL', 'debug'),

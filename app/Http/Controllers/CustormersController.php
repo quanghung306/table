@@ -1,34 +1,35 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Custormer;
+
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class CustormersController extends Controller
 {
     public function index()
     {
-       
-        return User::all();
+
+        return Custormer::all();
     }
 
     public function store(Request $request)
     {
-        return User::create($request->all());
+        return Custormer::create($request->all());
     }
 
     public function update(Request $request, $id)
     {
 
-        $user = User::findOrFail($id);
+        $user = Custormer::findOrFail($id);
         $user->update($request->all());
         return response()->json($user);
     }
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
+        $user = Custormer::findOrFail($id);
         if ($user) {
             $user->delete();
             return response()->json(null, 204);

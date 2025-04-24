@@ -1,18 +1,17 @@
 <?php
 
 namespace Database\Seeders;
-
-use App\Models\User;
+use App\Models\Prodcuts;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class UserSeeder extends Seeder
+class ProductSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        User::factory()->count(10)->create();
+        Prodcuts::factory()->count(10)->create();
     }
 }

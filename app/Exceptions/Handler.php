@@ -2,8 +2,11 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Throwable;
+
 
 class Handler extends ExceptionHandler
 {
@@ -27,4 +30,22 @@ class Handler extends ExceptionHandler
             //
         });
     }
+public function render($request, Throwable $exception)
+{
+
+    if ($exception instanceof ValidationException) {
+        return response()->json(['message' => $exception->validator->errors()->messages()], 422);
+    }
+    if ($exception instanceof AuthenticationException) {
+        // Nếu là request API, trả JSON
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json(['message' => $exception->getMessage()], 401);
+        }
+        session()->flash('error', 'Bạn cần đăng nhập để tiếp tục.');
+        return redirect()->guest(route('login'));
+    }
+
+    return parent::render($request, $exception);
 }
+}
+
