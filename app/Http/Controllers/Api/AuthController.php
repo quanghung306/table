@@ -43,6 +43,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+
         try {
             $request->validate([
                 'Username' => 'required|string|',
@@ -73,32 +74,27 @@ class AuthController extends Controller
             ], 500);
         }
     }
-    public function user(Request $request)
+    public function user()
     {
-        return response()->json($request->user());
+        Log::info('Current user', ['user' => auth()->user()]);
+        return response()->json(auth()->user());
     }
 
     public function logout(Request $request)
-{
-    try {
-        // Xóa token hiện tại
-        $request->user()->currentAccessToken()->delete();
-
-        // Tạo response logout thành công
-        $response = response()->json(['message' => 'Đăng xuất thành công']);
-
-        // Xóa cookie session và sanctum cookie
-        return $response
-            ->withoutCookie(cookie('laravel_session'))
-            ->withoutCookie(cookie('sanctum'))
-            ->withoutCookie(cookie('XSRF-TOKEN'));
-
-    } catch (Exception $e) {
-        Log::error('Error logging out: ' . $e->getMessage());
-        return response()->json([
-            'message' => 'Đăng xuất không thành công',
-            'error' => $e->getMessage()
-        ], 500);
+    {
+        try {
+            if ($request->user()) {
+                $request->user()->currentAccessToken()->delete();
+                return response()->json(['message' => 'Đăng xuất thành công'])
+                    ->withoutCookie(cookie('laravel_session'))
+                    ->withoutCookie(cookie('sanctum'))
+                    ->withoutCookie(cookie('XSRF-TOKEN'));
+            }
+            log::info('User logged out: ' . $request->user()->Username);
+            return response()->json(['message' => 'Không có người dùng để đăng xuất'], 400);
+        } catch (Exception $e) {
+            Log::error('Error logging out: ' . $e->getMessage());
+            return response()->json(['message' => 'Đăng xuất không thành công', 'error' => $e->getMessage()], 500);
+        }
     }
-}
 }
