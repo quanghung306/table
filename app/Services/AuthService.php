@@ -27,7 +27,7 @@ class AuthService
             ];
         } catch (Exception $e) {
             Log::error('Error Registering: ' . $e->getMessage());
-            throw new Exception(Lang::get('messages.register_failed'));
+            throw new Exception(Lang::get('message.register_failed'));
         }
     }
 
@@ -38,7 +38,7 @@ class AuthService
 
             if (!$user || !Hash::check($data['Password'], $user->Password)) {
                 throw ValidationException::withMessages([
-                    'Username' => [Lang::get('messages.invalid_credentials')],
+                    'Username' => [__('message.invalid_credentials')],
                 ]);
             }
 
@@ -53,7 +53,7 @@ class AuthService
             ];
         } catch (Exception $e) {
             Log::error('Error Logging in: ' . $e->getMessage());
-            throw new Exception(Lang::get('messages.login_failed'));
+            throw new Exception(__('message.login_failed'));
         }
     }
 
@@ -64,13 +64,13 @@ class AuthService
                 $user->currentAccessToken()->delete();
                 Log::info('User logged out: ' . $user->Username);
 
-                return ['message' => Lang::get('messages.logout_success')];
+                return ['message' => __('message.logout_success')];
             }
 
-            throw new Exception(Lang::get('messages.no_user_logout'));
+            throw new Exception(__('message.no_user_logout'));
         } catch (Exception $e) {
             Log::error('Error Logging out: ' . $e->getMessage());
-            throw new Exception(Lang::get('messages.logout_failed'));
+            throw new Exception(__('message.logout_failed'));
         }
     }
 }
